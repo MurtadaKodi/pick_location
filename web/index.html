@@ -1,0 +1,269 @@
+<!DOCTYPE html><html><head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Field app for picking location, attaching photos, and sending reports.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="PickLocation">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <title>Pick Location</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    #installPrompt {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 9999;
+      display: none;
+      background: #0a7c86;
+      color: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      padding: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #installPrompt .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    #installPrompt p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    #installPrompt .actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    #installPrompt button {
+      border: 0;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    #installBtn {
+      background: #ffffff;
+      color: #0a7c86;
+      flex: 1;
+    }
+
+    #dismissBtn {
+      background: rgba(255, 255, 255, 0.16);
+      color: #ffffff;
+    }
+  </style>
+  
+  
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  
+  
+  
+  
+  <style id="splash-screen-style">
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #0A7C86;
+          background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .contain {
+      display:block;
+      width:100%; height:100%;
+      object-fit: contain;
+    }
+
+    .stretch {
+      display:block;
+      width:100%; height:100%;
+    }
+
+    .cover {
+      display:block;
+      width:100%; height:100%;
+      object-fit: cover;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -ms-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+    }
+
+    .bottomLeft {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .bottomRight {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      document.getElementById("splash")?.remove();
+      document.getElementById("splash-branding")?.remove();
+      document.body.style.background = "transparent";
+    }
+  </script>
+</head>
+<body>
+    <picture id="splash" style="position: fixed; inset: 0; z-index: 9998;">
+      <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+      <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+      <img class="bottom" aria-hidden="true" src="splash/img/light-1x.png" alt="" style="width: min(100vw, 560px); height: auto; max-height: 100vh;">
+  </picture>
+  
+  
+  
+  <div id="installPrompt" role="dialog" aria-live="polite" aria-label="رسالة تثبيت التطبيق" dir="rtl">
+    <div class="row">
+      <p id="installText">ثبت التطبيق على جهازك للوصول السريع أثناء العمل الميداني.</p>
+    </div>
+    <div class="actions">
+      <button id="installBtn" type="button">تثبيت التطبيق</button>
+      <button id="dismissBtn" type="button">لاحقًا</button>
+    </div>
+  </div>
+
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script>
+    let deferredInstallPrompt;
+    const installPrompt = document.getElementById('installPrompt');
+    const installBtn = document.getElementById('installBtn');
+    const dismissBtn = document.getElementById('dismissBtn');
+    const installText = document.getElementById('installText');
+
+    function showInstallPrompt() {
+      installPrompt.style.display = 'block';
+    }
+
+    function hideInstallPrompt() {
+      installPrompt.style.display = 'none';
+    }
+
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredInstallPrompt = event;
+      showInstallPrompt();
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredInstallPrompt) {
+        deferredInstallPrompt.prompt();
+        await deferredInstallPrompt.userChoice;
+        deferredInstallPrompt = null;
+        hideInstallPrompt();
+      }
+    });
+
+    dismissBtn.addEventListener('click', hideInstallPrompt);
+
+    window.addEventListener('appinstalled', hideInstallPrompt);
+
+    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const isInStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    if (isIos && !isInStandalone) {
+      installText.textContent = 'للتثبيت على iPhone/iPad: افتح قائمة المشاركة ثم اختر إضافة إلى الشاشة الرئيسية.';
+      installBtn.style.display = 'none';
+      showInstallPrompt();
+    }
+
+    // Robust fallback: remove splash once Flutter view appears.
+    // This avoids being stuck on splash if bootstrap hook does not call removeSplashFromWeb.
+    (function ensureSplashRemoved() {
+      let removed = false;
+      const tryRemove = () => {
+        if (removed) return;
+        const flutterRoot = document.querySelector('flt-glass-pane, flutter-view, flt-scene-host');
+        if (flutterRoot) {
+          removeSplashFromWeb();
+          removed = true;
+        }
+      };
+
+      const observer = new MutationObserver(tryRemove);
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      const poll = setInterval(() => {
+        tryRemove();
+        if (removed) {
+          clearInterval(poll);
+          observer.disconnect();
+        }
+      }, 250);
+
+      // Last-resort timeout so splash never blocks forever.
+      setTimeout(() => {
+        if (!removed) {
+          removeSplashFromWeb();
+          removed = true;
+          clearInterval(poll);
+          observer.disconnect();
+        }
+      }, 10000);
+    })();
+  </script>
+  <script src="flutter_bootstrap.js" async=""></script>
+
+
+</body></html>

@@ -1,0 +1,35 @@
+{
+    "name": "تحديد الموقع الميداني",
+    "short_name": "تحديد الموقع",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#0A7C86",
+    "theme_color": "#0A7C86",
+    "description": "تطبيق ميداني لتحديد الموقع، إرفاق الصور، وإرسال البلاغات.",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

@@ -1,0 +1,57 @@
+# Hostinger cache rules for Flutter Web / PWA
+# Upload this content as .htaccess in your public_html folder.
+
+<IfModule mod_headers.c>
+  # Ensure latest app shell and service worker are always fetched
+  <FilesMatch "^(index\.html|flutter_service_worker\.js|manifest\.json|version\.json)$">
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # Static assets generated with hashes can be cached aggressively
+  <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|otf|wasm)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+
+  # App shell / SW
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+
+  # Static assets
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType application/wasm "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# SPA fallback for Flutter web routes
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Do not rewrite real files/folders
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Route all other requests to index.html
+  RewriteRule ^ index.html [L]
+</IfModule>
