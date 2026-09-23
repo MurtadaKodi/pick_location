@@ -42,6 +42,10 @@ dependencies:
   share_plus: ^10.0.2
   shared_preferences: ^2.3.2
   url_launcher: ^6.3.0
+  proj4dart: ^2.1.0
+  pdf: ^3.12.0
+  printing: ^5.14.3
+  http: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +71,23 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/branding/app_icon_simple.png
+    - assets/fonts/
+
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
+
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-VariableFont_wdth,wght.ttf
+
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo-VariableFont_slnt,wght.ttf
+
 flutter_launcher_icons:
   android: true
   ios: true
@@ -90,7 +111,7 @@ flutter_native_splash:
   web: true
   android_12:
     color: "#0A7C86"
-    image: assets/branding/splash_logo.png
+    image: assets/branding/splash_logo.jpeg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -109,10 +130,11 @@ flutter_native_splash:
   # list giving the asset and other descriptors for the font. For
   # example:
   # fonts:
-  #   - family: Schyler
   #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  #       - asset: assets/fonts/NotoSans-VariableFont_wdth,wght.ttf
+  #       - asset: assets/fonts/Roboto-VariableFont_wdth,wght.ttf
+  #       - asset: assets/fonts/Cairo-VariableFont_slnt,wght.ttf
+
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
